@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.monitor.dao.IDeviceStatusDao">
+
+    <select id="getInTimeData" resultType="com.monitor.entity.model.DeviceStatusModel">
+        SELECT
+            id,
+            p_name pointName,
+            p_value pointValue,
+            collect_time collectTime,
+            modify_time modifyTime,
+            modify_user modifyUser,
+            device_type AS deviceType
+        FROM
+            (
+                SELECT
+                    p_name AS pName,
+                    MAX(collect_time) AS maxTime
+                FROM
+                    ${tableName}
+                GROUP BY
+                    p_name,device_type
+            ) t1
+        LEFT JOIN
+            ${tableName}
+         t2 ON t1.maxTime = t2.collect_time
+        AND t1.pName = t2.p_name
+    </select>
+
+    <insert id="batchInsert">
+        INSERT INTO ${tableName} (
+            device_type,
+            p_name,
+            p_value,
+            collect_time,
+            modify_user,
+            modify_time
+        )
+        VALUES
+        <foreach collection="monitorUploadParamList" item="item" index="index" separator=",">
+            (
+                #{item.deviceType},
+                #{item.pointName},
+                #{item.pointValue},
+                #{item.collectTime},
+                #{item.modifyUser},
+                #{item.modifyTime}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.monitor.dao.IDeviceDao">
+
+    <select id="getInTimeData" resultType="com.monitor.entity.model.DeviceCommonModel">
+        SELECT
+            id,
+            p_name pointName,
+            p_switch switchStatus,
+            collect_time collectTime,
+            modify_time modifyTime,
+            modify_user modifyUser,
+            #{tableName} AS dataType
+        FROM
+            (
+                SELECT
+                    p_name AS pName,
+                    MAX(collect_time) AS maxTime
+                FROM
+                    ${tableName}
+                GROUP BY
+                    p_name
+            ) t1
+        LEFT JOIN ${tableName} t2 ON t1.maxTime = t2.collect_time
+        AND t1.pName = t2.p_name
+    </select>
+
+    <select id="getAgvInTimeData" resultType="com.monitor.entity.model.DeviceAgvModel">
+        SELECT
+            id,
+            p_name pointName,
+            p_switch switchStatus,
+            collect_time collectTime,
+            modify_time modifyTime,
+            modify_user modifyUser,
+            power,
+            #{tableName} AS dataType
+        FROM
+            (
+                SELECT
+                    p_name AS pName,
+                    MAX(collect_time) AS maxTime
+                FROM
+                    ${tableName}
+                GROUP BY
+                    p_name
+            ) t1
+        LEFT JOIN ${tableName} t2 ON t1.maxTime = t2.collect_time
+        AND t1.pName = t2.p_name
+    </select>
+
+    <insert id="betchInsertAgv">
+        INSERT INTO agv (
+            p_name,
+            p_switch,
+            power,
+            locus,
+            collect_time,
+            modify_user,
+            modify_time
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.pointName},
+            #{item.switchStatus},
+            #{item.power},
+            #{item.locus},
+            #{item.collectTime},
+            #{item.modifyUser},
+            #{item.modifyTime}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="betchInsertYqj">
+        INSERT INTO yqj (
+            p_name,
+            p_switch,
+            sf_rotate_speed,
+            yk_rotate_speed,
+            pd_rotate_speed,
+            collect_time,
+            modify_user,
+            modify_time
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.pointName},
+            #{item.switchStatus},
+            #{item.sfRotateSpeed},
+            #{item.ykRotateSpeed},
+            #{item.pdRotateSpeed},
+            #{item.collectTime},
+            #{item.modifyUser},
+            #{item.modifyTime}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="betchInsertRlj">
+        INSERT INTO rlj (
+            p_name,
+            p_switch,
+            water_line,
+            temperature,
+            rotate_speed,
+            collect_time,
+            modify_user,
+            modify_time
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.pointName},
+            #{item.switchStatus},
+            #{item.waterLine},
+            #{item.temperature},
+            #{item.rotateSpeed},
+            #{item.collectTime},
+            #{item.modifyUser},
+            #{item.modifyTime}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="betchInsertSsj">
+        INSERT INTO ssj (
+            p_name,
+            p_switch,
+            rotate_speed,
+            collect_time,
+            modify_user,
+            modify_time
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.pointName},
+            #{item.switchStatus},
+            #{item.rotateSpeed},
+            #{item.collectTime},
+            #{item.modifyUser},
+            #{item.modifyTime}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="betchInsertMdRobot">
+        INSERT INTO ssj (
+            p_name,
+            p_switch,
+            collect_time,
+            modify_user,
+            modify_time
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.pointName},
+            #{item.switchStatus},
+            #{item.collectTime},
+            #{item.modifyUser},
+            #{item.modifyTime}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

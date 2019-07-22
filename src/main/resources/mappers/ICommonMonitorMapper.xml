@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.monitor.dao.ICommonMonitorDao">
+
+    <sql id="sql_choose">
+        SELECT
+            id,
+            p_name pointName,
+            p_value pointValue,
+            collect_time collectTime,
+            modify_time modifyTime,
+            modify_user modifyUser
+        FROM
+    </sql>
+
+    <select id="getInTimeData" resultType="com.monitor.entity.model.CommonMonitorModel">
+        <include refid="sql_choose"/>
+            (
+                SELECT
+                    p_name AS pName,
+                    MAX(collect_time) AS maxTime
+                FROM
+                    ${tableName}
+                <if test="pNameArr != null and pNameArr.length > 0">
+                    WHERE p_name IN
+                    <foreach collection="pNameArr" index="index" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                GROUP BY
+                    p_name
+            ) t1
+        LEFT JOIN
+            ${tableName}
+         t2 ON t1.maxTime = t2.collect_time
+        AND t1.pName = t2.p_name
+    </select>
+
+    <insert id="batchInsert">
+        INSERT INTO ${tableName} (
+            p_name,
+            p_value,
+            collect_time,
+            modify_user,
+            modify_time
+        )
+        VALUES
+        <foreach collection="monitorUploadParamList" item="item" index="index" separator=",">
+            (
+                #{item.pointName},
+                #{item.pointValue},
+                #{item.collectTime},
+                #{item.modifyUser},
+                #{item.modifyTime}
+            )
+        </foreach>
+    </insert>
+
+    <select id="getMonitorHistory" resultType="com.monitor.entity.model.CommonMonitorModel">
+        <include refid="sql_choose"/>
+            ${tableName}
+        WHERE
+            date_format(
+                collect_time,
+                '%Y-%m-%d %T'
+            ) BETWEEN #{startTime} AND #{endTime}
+        <if test="pNameArr != null and pNameArr.length > 0">
+            AND p_name IN
+            <foreach collection="pNameArr" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

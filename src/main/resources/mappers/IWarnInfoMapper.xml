@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.monitor.dao.IWarnInfoDao">
+
+    <select id="getInTimeWarnStatus" resultType="com.monitor.entity.model.WarnStatusModel">
+      SELECT
+            id,
+            warn_status warnStatus,
+            collect_time collectTime,
+            warn_ids warnIds,
+            warn_codes warnCodes
+        FROM tb_warn_status WHERE id = (
+            SELECT MAX(id) AS maxId FROM tb_warn_status
+        )
+    </select>
+
+    <select id="getInTimeWarns" resultType="com.monitor.entity.model.WarnExtendModel">
+        SELECT
+            id,
+            warn_code AS warnCode,
+            device_type AS deviceType,
+            warn_info AS warnInfo,
+            warn_condition AS warnCondition,
+            remark,
+            auto_back AS autoBack,
+            collect_time AS collectTime,
+            continue_to_time AS continueToTime,
+            modify_user AS modifyUser,
+            modify_time AS modifyTime,
+            TIMESTAMPDIFF(SECOND, collect_time,continue_to_time) AS continueTime
+        FROM
+            tb_warn
+        WHERE id IN
+        <foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getHistoryWarns" resultType="com.monitor.entity.model.WarnExtendModel">
+        SELECT
+            id,
+            warn_code AS warnCode,
+            device_type AS deviceType,
+            warn_info AS warnInfo,
+            warn_condition AS warnCondition,
+            remark AS remark,
+            auto_back AS autoBack,
+            collect_time AS collectTime,
+            continue_to_time AS continueToTime,
+            modify_user AS modifyUser,
+            modify_time AS modifyTime,
+            TIMESTAMPDIFF(SECOND, collect_time,continue_to_time) AS continueTime
+        FROM
+            tb_warn
+        WHERE
+            date_format(
+                continue_to_time,
+                '%Y-%m-%d %T'
+            ) BETWEEN #{startTime} AND #{endTime}
+        <if test="warnCodeArr != null and warnCodeArr.length > 0">
+            AND warn_code IN
+            <foreach collection="warnCodeArr" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <!--插入告警状态信息-->
+    <insert id="insertWarnStatus">
+        INSERT INTO tb_warn_status (
+            warn_status,
+            collect_time,
+            warn_ids,
+            warn_codes
+        )
+        VALUES
+        (
+            #{warnStatus},
+            #{collectTime},
+            #{warnIds},
+            #{warnCodes}
+        )
+    </insert>
+
+    <insert id="insertWarns" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO tb_warn (
+            warn_code,
+            device_type,
+            warn_info,
+            warn_condition,
+            remark,
+            auto_back,
+            collect_time,
+            continue_to_time,
+            modify_user,
+            modify_time
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+                #{item.warnCode},
+                #{item.deviceType},
+                #{item.warnInfo},
+                #{item.warnCondition},
+                #{item.remark},
+                #{item.autoBack},
+                #{item.collectTime},
+                #{item.collectTime},
+                #{item.modifyUser},
+                #{item.modifyTime}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateWarns">
+            UPDATE tb_warn
+            SET continue_to_time=#{collectTime}
+            WHERE id = #{id}
+    </update>
+
+</mapper>
