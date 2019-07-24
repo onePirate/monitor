@@ -11,6 +11,7 @@ import com.monitor.entity.model.DeviceCommonModel;
 import com.monitor.entity.model.DeviceStatusModel;
 import com.monitor.entity.param.EnvQueryHistoryParam;
 import com.monitor.entity.param.EnvQueryInTimeParam;
+import com.monitor.service.IDeviceCommonService;
 import com.monitor.service.IDeviceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -27,14 +28,14 @@ import java.util.stream.Collectors;
 @RestController
 public class MonitorController {
 
-    @Resource(name = "IDeviceStatusService")
+    @Resource(name = "deviceStatusService")
     IDeviceService deviceStatusService;
 
-    @Resource(name = "IDeviceSwitchService")
+    @Resource(name = "deviceSwitchService")
     IDeviceService deviceSwitchService;
 
-    @Resource(name = "IDeviceCommonService")
-    IDeviceService deviceCommonService;
+    @Resource(name = "deviceCommonService")
+    IDeviceCommonService deviceCommonService;
 
     /**
      * 查询工艺参数信息

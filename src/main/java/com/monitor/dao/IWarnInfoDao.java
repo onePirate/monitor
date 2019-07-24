@@ -1,5 +1,6 @@
 package com.monitor.dao;
 
+import com.monitor.entity.bo.CleanParamBo;
 import com.monitor.entity.model.WarnExtendModel;
 import com.monitor.entity.model.WarnModel;
 import com.monitor.entity.model.WarnStatusModel;
@@ -48,5 +49,20 @@ public interface IWarnInfoDao {
      * @return
      */
     int updateWarns(WarnUploadParam warnUploadParam);
+
+    /**
+     * 清除警告状态数据
+     *
+     * @param cleanParamBo
+     * @return
+     */
+    int cleanWarnsStatus(CleanParamBo cleanParamBo);
+
+    /**
+     * 清除警告数据
+     * @param cleanParamBo
+     * @return
+     */
+    int cleanWarns(CleanParamBo cleanParamBo);
 
 }

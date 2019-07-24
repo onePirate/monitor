@@ -1,9 +1,10 @@
 package com.monitor.service.impl;
 
+import com.monitor.common.constant.CommonConstant;
 import com.monitor.common.tools.DateTool;
 import com.monitor.dao.IWarnInfoDao;
+import com.monitor.entity.bo.CleanParamBo;
 import com.monitor.entity.model.WarnExtendModel;
-import com.monitor.entity.model.WarnModel;
 import com.monitor.entity.model.WarnStatusModel;
 import com.monitor.entity.param.WarnHistoryParam;
 import com.monitor.entity.param.WarnUploadParam;
@@ -97,6 +98,13 @@ public class WarnService implements IWarnService {
         return warnInfoDao.getHistoryWarns(warnHistoryParam);
     }
 
+    @Transactional
+    @Override
+    public void cleanEnvData(String cleanTime) {
+        warnInfoDao.cleanWarns(new CleanParamBo(cleanTime, null));
+        warnInfoDao.cleanWarnsStatus(new CleanParamBo(cleanTime, null));
+    }
+
     /**
      * 将list转成String
      * @param list
@@ -113,6 +121,5 @@ public class WarnService implements IWarnService {
         }
         return warnStatusIds.toString();
     }
-
 
 }

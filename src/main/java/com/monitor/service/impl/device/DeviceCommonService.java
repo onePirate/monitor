@@ -4,16 +4,17 @@ import com.monitor.common.constant.CommonConstant;
 import com.monitor.common.enums.StateEnum;
 import com.monitor.common.exception.CustomerException;
 import com.monitor.dao.IDeviceDao;
+import com.monitor.entity.bo.CleanParamBo;
 import com.monitor.entity.bo.ModelParamBo;
 import com.monitor.entity.param.*;
-import com.monitor.service.IDeviceService;
+import com.monitor.service.IDeviceCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class IDeviceCommonService implements IDeviceService {
+@Service("deviceCommonService")
+public class DeviceCommonService implements IDeviceCommonService {
 
 
     @Autowired
@@ -42,5 +43,16 @@ public class IDeviceCommonService implements IDeviceService {
         }else{
             throw new CustomerException(StateEnum.REQ_HAS_ERR);
         }
+    }
+
+    @Override
+    public void cleanEnvData(String cleanTime) {
+        deviceDao.cleanDeviceData(new CleanParamBo(cleanTime,CommonConstant.TABLE_DEVICE_SWITCH));
+        deviceDao.cleanDeviceData(new CleanParamBo(cleanTime,CommonConstant.TABLE_DEVICE_STATUS));
+        deviceDao.cleanDeviceData(new CleanParamBo(cleanTime,CommonConstant.TABLE_AGV));
+        deviceDao.cleanDeviceData(new CleanParamBo(cleanTime,CommonConstant.TABLE_YQJ));
+        deviceDao.cleanDeviceData(new CleanParamBo(cleanTime,CommonConstant.TABLE_RLJ));
+        deviceDao.cleanDeviceData(new CleanParamBo(cleanTime,CommonConstant.TABLE_SSJ));
+        deviceDao.cleanDeviceData(new CleanParamBo(cleanTime,CommonConstant.TABLE_MD_ROBOT));
     }
 }

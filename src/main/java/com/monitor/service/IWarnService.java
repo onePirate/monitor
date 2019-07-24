@@ -14,4 +14,6 @@ public interface IWarnService {
 
     List<WarnExtendModel> getHistoryWarns(WarnHistoryParam warnHistoryParam);
 
+    void cleanEnvData(String cleanTime);
+
 }

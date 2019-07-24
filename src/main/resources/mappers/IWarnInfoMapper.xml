@@ -120,4 +120,12 @@
             WHERE id = #{id}
     </update>
 
+    <delete id="cleanWarnsStatus">
+        DELETE FROM tb_warn_status WHERE collect_time &lt; #{cleanTime}
+    </delete>
+
+    <delete id="cleanWarns">
+        DELETE FROM tb_warn WHERE collect_time &lt; #{cleanTime}
+    </delete>
+
 </mapper>

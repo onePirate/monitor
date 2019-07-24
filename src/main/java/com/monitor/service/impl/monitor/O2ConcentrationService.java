@@ -2,6 +2,7 @@ package com.monitor.service.impl.monitor;
 
 import com.monitor.common.constant.CommonConstant;
 import com.monitor.dao.ICommonMonitorDao;
+import com.monitor.entity.bo.CleanParamBo;
 import com.monitor.entity.bo.InsertModelParamBo;
 import com.monitor.entity.bo.ModelParamBo;
 import com.monitor.entity.model.CommonMonitorModel;
@@ -34,5 +35,10 @@ public class O2ConcentrationService implements IMonitorService {
     @Override
     public int batchInsert(List<MonitorUploadParam> monitorUploadParamList) {
         return commonMonitorDao.batchInsert(new InsertModelParamBo(CommonConstant.TABLE_O2_CONCENTRATION,monitorUploadParamList));
+    }
+
+    @Override
+    public void cleanEnvData(String cleanTime) {
+        commonMonitorDao.cleanMonitorData(new CleanParamBo(cleanTime,CommonConstant.TABLE_O2_CONCENTRATION));
     }
 }

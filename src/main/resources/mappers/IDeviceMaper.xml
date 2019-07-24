@@ -169,4 +169,8 @@
         </foreach>
     </insert>
 
+    <delete id="cleanDeviceData">
+        DELETE FROM ${tableName} WHERE collect_time &lt; #{cleanTime}
+    </delete>
+
 </mapper>

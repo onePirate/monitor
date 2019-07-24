@@ -10,8 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class IDeviceSwitchService implements IDeviceService {
+@Service("deviceStatusService")
+public class DeviceStatusService implements IDeviceService {
+
 
     @Autowired
     IDeviceStatusDao deviceStatusDao;

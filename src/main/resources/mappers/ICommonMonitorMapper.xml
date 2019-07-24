@@ -74,4 +74,8 @@
         </if>
     </select>
 
+    <delete id="cleanMonitorData">
+        DELETE FROM ${tableName} WHERE collect_time &lt; #{cleanTime}
+    </delete>
+
 </mapper>

@@ -1,5 +1,6 @@
 package com.monitor.dao;
 
+import com.monitor.entity.bo.CleanParamBo;
 import com.monitor.entity.bo.ModelParamBo;
 import com.monitor.entity.model.DeviceAgvModel;
 import com.monitor.entity.model.DeviceCommonModel;
@@ -22,5 +23,12 @@ public interface IDeviceDao {
     int betchInsertSsj(List<SsjUploadParam> uploadParamList);
 
     int betchInsertMdRobot(List<MonitorUploadParam> uploadParamList);
+
+    /**
+     * 清除警告数据
+     * @param cleanParamBo
+     * @return
+     */
+    int cleanDeviceData(CleanParamBo cleanParamBo);
 
 }

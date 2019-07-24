@@ -16,4 +16,5 @@ public interface IMonitorService {
 
     int batchInsert(List<MonitorUploadParam> monitorUploadParamList);
 
+    void cleanEnvData(String cleanTime);
 }

@@ -1,5 +1,6 @@
 package com.monitor.dao;
 
+import com.monitor.entity.bo.CleanParamBo;
 import com.monitor.entity.bo.InsertModelParamBo;
 import com.monitor.entity.bo.ModelParamBo;
 import com.monitor.entity.model.CommonMonitorModel;
@@ -13,5 +14,7 @@ public interface ICommonMonitorDao {
     List<CommonMonitorModel> getMonitorHistory(ModelParamBo modelParamBo);
 
     int batchInsert(InsertModelParamBo insertModelParamBo);
+
+    int cleanMonitorData(CleanParamBo cleanParamBo);
 
 }

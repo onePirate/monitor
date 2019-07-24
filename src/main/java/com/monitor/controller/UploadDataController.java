@@ -6,6 +6,7 @@ import com.monitor.common.enums.StateEnum;
 import com.monitor.common.tools.PointTypeBeanTool;
 import com.monitor.common.tools.ResultTool;
 import com.monitor.entity.param.*;
+import com.monitor.service.IDeviceCommonService;
 import com.monitor.service.IDeviceService;
 import com.monitor.service.IWarnService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,14 +26,14 @@ import java.util.stream.Collectors;
 @RestController
 public class UploadDataController {
 
-    @Resource(name = "IDeviceStatusService")
+    @Resource(name = "deviceStatusService")
     IDeviceService deviceStatusService;
 
-    @Resource(name = "IDeviceSwitchService")
+    @Resource(name = "deviceSwitchService")
     IDeviceService deviceSwitchService;
 
-    @Resource(name = "IDeviceCommonService")
-    IDeviceService deviceCommonService;
+    @Resource(name = "deviceCommonService")
+    IDeviceCommonService deviceCommonService;
 
     @Autowired
     IWarnService warnService;
@@ -46,7 +48,13 @@ public class UploadDataController {
         if (checkList(uploadParamList)){
             return ResultTool.failed(StateEnum.REQ_HAS_ERR);
         }
-        return ResultTool.successWithMap(PointTypeBeanTool.getMonitorService(uploadParamList.get(0).getPointType()).batchInsert(uploadParamList));
+        int count = 0;
+        for (int i = 0; i < uploadParamList.size(); i++) {
+            List<MonitorUploadParam> subParamList = new ArrayList<>();
+            subParamList.add(uploadParamList.get(i));
+            count += PointTypeBeanTool.getMonitorService(uploadParamList.get(i).getPointType()).batchInsert(subParamList);
+        }
+        return ResultTool.successWithMap(count);
     }
 
     /**
