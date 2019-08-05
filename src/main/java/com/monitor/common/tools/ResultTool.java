@@ -1,10 +1,9 @@
 package com.monitor.common.tools;
 
 
-import com.github.pagehelper.Page;
 import com.monitor.common.entity.ListResult;
-import com.monitor.common.enums.StateEnum;
 import com.monitor.common.entity.Result;
+import com.monitor.common.enums.StateEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +56,12 @@ public class ResultTool {
      */
     public static Result failed(StateEnum stateEnum) {
         return customResp(stateEnum,null);
+    }
+    /**
+     * 失败返回定义好的数据
+     */
+    public static Result failed(String error) {
+        return customResp(StateEnum.valueOf(error),null);
     }
 
     /**

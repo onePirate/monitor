@@ -21,7 +21,7 @@ public class CustomerException extends RuntimeException{
 
     public CustomerException(StateEnum stateEnum)
     {
-        super(stateEnum.getMsg());
+        super(stateEnum.toString());
         this.setCode(stateEnum.getCode());
     }
 }

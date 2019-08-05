@@ -3,7 +3,7 @@ package com.monitor.common.enums;
 public enum StateEnum {
 
     OK(200,"成功"),
-    FAIL(500,"失败"),
+    FAIL(500,"请求失败，稍后重试"),
     REQ_HAS_ERR(506,"请求参数有误"),
     ;
 

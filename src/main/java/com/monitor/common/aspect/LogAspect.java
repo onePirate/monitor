@@ -48,7 +48,14 @@ public class LogAspect {
         }
         msig = (MethodSignature) sig;
         Method currentMethod = target.getClass().getMethod(msig.getName(), msig.getParameterTypes());
-        log.info("[METHOD]:{}, [TIME]:{}",currentMethod.getName() , beginTime);
+        Object[] args = point.getArgs();
+        String paramJson = "";
+        try {
+            paramJson = JSONObject.toJSONString(args);
+        }catch (Exception ex){
+            log.info("analysis args has errors!",ex);
+        }
+        log.info("[METHOD]:{}, [TIME]:{}, [PARAM]:{}",currentMethod.getName() , beginTime, paramJson);
         Object result = point.proceed();
         try{
             JSONObject resultJson = JSONObject.parseObject(JSONObject.toJSONString(result));

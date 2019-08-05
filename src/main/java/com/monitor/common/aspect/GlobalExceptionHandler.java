@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = CustomerException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Result runtimeExceptionHandler(CustomerException e) {
-        return ResultTool.failed();
+        return ResultTool.failed(e.getMessage());
     }
 
     /**
