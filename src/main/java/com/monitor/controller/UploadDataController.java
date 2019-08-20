@@ -91,8 +91,12 @@ public class UploadDataController {
     @Transactional
     public int execDeviceInsert(List<MonitorUploadParam> allDeviceList, List<MonitorUploadParam> statusList) {
         int count = 0;
-        count += deviceStatusService.batchInsert(CommonConstant.TABLE_DEVICE_STATUS,statusList);
-        count += deviceSwitchService.batchInsert(CommonConstant.TABLE_DEVICE_SWITCH,allDeviceList);
+        if (statusList != null && statusList.size()>0) {
+            count += deviceStatusService.batchInsert(CommonConstant.TABLE_DEVICE_STATUS,statusList);
+        }
+        if (allDeviceList != null && allDeviceList.size()>0) {
+            count += deviceSwitchService.batchInsert(CommonConstant.TABLE_DEVICE_SWITCH,allDeviceList);
+        }
         return count;
     }
 

@@ -35,7 +35,7 @@ public class WarnService implements IWarnService {
 
     @Override
     @Transactional
-    public int insertWarns(List<WarnUploadParam> warnUploadParams) {
+    public synchronized int insertWarns(List<WarnUploadParam> warnUploadParams) {
         if (warnUploadParams ==null || warnUploadParams.size()==0){
             warnInfoDao.insertWarnStatus(WarnStatusModel.builder().warnStatus(0).collectTime(DateTool.getStringDate()).build());
             return 0;

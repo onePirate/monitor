@@ -23,7 +23,7 @@ public class CommonConstant {
      */
     public static final String DEVICE_BLOWER = "blower";//风机
     public static final String DEVICE_HEATER_= "heater";//加热器
-    public static final String DEVICE_TEMPERATURE = "temperature";//加热器
+    public static final String DEVICE_TEMPERATURE = "temperature";//温度
     public static final String DEVICE_HUMIDIFIER = "humidifier";//加湿器
     public static final String DEVICE_HUMIDITY = "humidity";//湿度
     public static final String DEVICE_BLIND = "blind";//百叶窗

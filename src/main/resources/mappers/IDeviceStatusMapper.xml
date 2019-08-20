@@ -17,6 +17,7 @@
             (
                 SELECT
                     p_name AS pName,
+                    device_type AS deviceType,
                     MAX(collect_time) AS maxTime
                 FROM
                     ${tableName}
@@ -27,6 +28,7 @@
             ${tableName}
          t2 ON t1.maxTime = t2.collect_time
         AND t1.pName = t2.p_name
+        AND t1.deviceType = t2.device_type
     </select>
 
     <insert id="batchInsert">
