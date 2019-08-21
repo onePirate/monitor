@@ -1,6 +1,5 @@
 package com.monitor.common.tools;
 
-import com.alibaba.fastjson.JSONObject;
 import com.monitor.common.entity.TokenModel;
 import com.monitor.entity.param.UserParam;
 
@@ -13,6 +12,13 @@ public class TokenTool {
 
     private static Map<String,TokenModel> tokenMap = new ConcurrentHashMap<>();
 
+    /**
+     * 获取tokenMap
+     * @return
+     */
+    public static Map<String,TokenModel> getTokenMap(){
+        return tokenMap;
+    }
 
     /**
      * 获取token信息
