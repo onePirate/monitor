@@ -1,11 +1,11 @@
 package com.monitor.common.aspect;
 
 import com.monitor.common.entity.Result;
+import com.monitor.common.exception.CustomerException;
 import com.monitor.common.tools.ResultTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import com.monitor.common.exception.CustomerException;
 
 /**
  * @Author: gaodw
@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = CustomerException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Result runtimeExceptionHandler(CustomerException e) {
+        log.error("server has error!",e);
         return ResultTool.failed(e.getMessage());
     }
 
