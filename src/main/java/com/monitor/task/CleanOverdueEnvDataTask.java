@@ -2,8 +2,6 @@ package com.monitor.task;
 
 import com.monitor.common.constant.CommonConstant;
 import com.monitor.common.entity.TokenModel;
-import com.monitor.common.enums.StateEnum;
-import com.monitor.common.exception.CustomerException;
 import com.monitor.common.tools.DateTool;
 import com.monitor.common.tools.PointTypeBeanTool;
 import com.monitor.common.tools.TokenTool;
