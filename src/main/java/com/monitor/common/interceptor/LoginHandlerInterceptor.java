@@ -6,6 +6,7 @@ import com.monitor.common.exception.CustomerException;
 import com.monitor.common.tools.TokenTool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,6 +22,10 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
     //目标方法执行之前
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
+        if (request.getRequestURI().equals("/")
+            || StringUtils.isEmpty(request.getRequestURI())){
+            return false;
+        }
         String token = request.getHeader("token");
         if (token == null) {
             throw new CustomerException(StateEnum.USER_NOT_LOGIN);
