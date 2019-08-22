@@ -28,4 +28,3 @@ jobs:
 #单位：毫秒
 token:
   timeout: 86400000
-#  timeout: 50
