@@ -1,19 +1,18 @@
 package com.monitor.task;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.monitor.common.constant.CommonConstant;
 import com.monitor.common.entity.TokenModel;
 import com.monitor.common.tools.DateTool;
 import com.monitor.common.tools.PointTypeBeanTool;
 import com.monitor.common.tools.TokenTool;
-import com.monitor.service.IDeviceCommonService;
-import com.monitor.service.IWarnService;
+import com.monitor.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 @Slf4j
@@ -23,11 +22,20 @@ public class CleanOverdueEnvDataTask {
     @Value("${token.timeout}")
     long timeout;
 
-    @Resource(name = "deviceCommonService")
-    IDeviceCommonService deviceCommonService;
-
     @Autowired
     IWarnService warnService;
+    @Autowired
+    IDeviceStatusService iDeviceStatusService;
+    @Autowired
+    IYqjService iYqjService;
+    @Autowired
+    ISsjService iSsjService;
+    @Autowired
+    ITpzyqgService iTpzyqgService;
+    @Autowired
+    ILxzsjService iLxzsjService;
+    @Autowired
+    IJqRobotService iJqRobotService;
 
     @Scheduled(cron = "${jobs.cron}")
     public void envDataCleanTask() {
@@ -64,9 +72,16 @@ public class CleanOverdueEnvDataTask {
             log.warn("CO2_CONCENTRATION clean data has errors", e);
         }
         try {
-            deviceCommonService.cleanEnvData(cleanTime);
+            QueryWrapper queryWrapper = new QueryWrapper<>();
+            queryWrapper.le("collect_time", cleanTime);
+            iYqjService.remove(queryWrapper);
+            iJqRobotService.remove(queryWrapper);
+            iLxzsjService.remove(queryWrapper);
+            iSsjService.remove(queryWrapper);
+            iTpzyqgService.remove(queryWrapper);
+            iDeviceStatusService.remove(queryWrapper);
         } catch (Exception e) {
-            log.warn("CO2_CONCENTRATION clean data has errors", e);
+            log.warn("device data clean data has errors", e);
         }
         try {
             warnService.cleanEnvData(cleanTime);

@@ -19,18 +19,6 @@ public class CommonConstant {
     public static final int POINT_TYPE_CO2_CONCENTRATION = 6;
 
     /**
-     * 发酵房设备
-     */
-    public static final String DEVICE_BLOWER = "blower";//风机
-    public static final String DEVICE_HEATER_= "heater";//加热器
-    public static final String DEVICE_TEMPERATURE = "temperature";//温度
-    public static final String DEVICE_HUMIDIFIER = "humidifier";//加湿器
-    public static final String DEVICE_HUMIDITY = "humidity";//湿度
-    public static final String DEVICE_BLIND = "blind";//百叶窗
-    public static final String DEVICE_AUTO_DOOR = "auto_door";//自动门
-    public static final String DEVICE_CYCLE_MODE = "cycle_mode";//循环模式(0:内\1:外)
-
-    /**
      * 表名
      */
     public static final String TABLE_CO2_CONCENTRATION = "co2_concentration";
@@ -38,16 +26,7 @@ public class CommonConstant {
     public static final String TABLE_CURVE_TEMPERATURE = "curve_temperature";
     public static final String TABLE_ENV_HUMIDITY = "environment_humidity";
     public static final String TABLE_ENV_TEMPERATURE = "environment_temperature";
-    public static final String TABLE_O2_CONCENTRATION= "o2_concentration";
-    public static final String TABLE_DEVICE_SWITCH = "device_switch";
-    public static final String TABLE_DEVICE_STATUS = "device_status";
-    public static final String TABLE_AGV = "agv";
-    public static final String TABLE_MD_ROBOT = "md_robot";
-    public static final String TABLE_RLJ = "rlj";
-    public static final String TABLE_SSJ = "ssj";
-    public static final String TABLE_YQJ = "yqj";
-
-
+    public static final String TABLE_O2_CONCENTRATION = "o2_concentration";
 
 
 }

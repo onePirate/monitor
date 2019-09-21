@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.monitor.dao.ITpzyqgDao">
+
+    <sql id="sql_choose">
+        SELECT
+            id,
+            p_name AS pointName,
+	        p_switch AS switchStatus,
+            collect_time collectTime,
+            modify_time modifyTime,
+            modify_user modifyUser
+        FROM
+    </sql>
+
+    <select id="getDeviceInTimeDatas" resultType="com.monitor.entity.mpModel.TpzyqgModel">
+        <include refid="sql_choose"/>
+        (
+            SELECT
+                p_name AS pName,
+                MAX(collect_time) AS maxTime
+            FROM
+                tpzyqg
+            GROUP BY
+                p_name
+        ) t1
+        LEFT JOIN tpzyqg t2 ON t1.maxTime = t2.collect_time
+        AND t1.pName = t2.p_name
+    </select>
+
+</mapper>

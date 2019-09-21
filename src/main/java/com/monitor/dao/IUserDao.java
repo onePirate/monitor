@@ -1,12 +1,8 @@
 package com.monitor.dao;
 
-import com.monitor.entity.model.UserModel;
-import com.monitor.entity.param.UserParam;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.monitor.entity.mpModel.UserModel;
 
-public interface IUserDao {
-
-    UserModel getUser(UserParam userParam);
-
-    int insertUser(UserParam userParam);
+public interface IUserDao extends BaseMapper<UserModel> {
 
 }

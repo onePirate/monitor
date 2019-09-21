@@ -1,44 +1,45 @@
 package com.monitor.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.monitor.common.constant.CommonConstant;
 import com.monitor.common.entity.Result;
 import com.monitor.common.enums.StateEnum;
 import com.monitor.common.tools.PointTypeBeanTool;
 import com.monitor.common.tools.ResultTool;
 import com.monitor.entity.model.CommonMonitorModel;
-import com.monitor.entity.model.DeviceCommonModel;
-import com.monitor.entity.model.DeviceStatusModel;
+import com.monitor.entity.param.DeviceRoomParam;
 import com.monitor.entity.param.EnvQueryHistoryParam;
 import com.monitor.entity.param.EnvQueryInTimeParam;
-import com.monitor.service.IDeviceCommonService;
-import com.monitor.service.IDeviceService;
+import com.monitor.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-public class MonitorController {
+public class DeviceQueryController {
 
-    @Resource(name = "deviceStatusService")
-    IDeviceService deviceStatusService;
 
-    @Resource(name = "deviceSwitchService")
-    IDeviceService deviceSwitchService;
-
-    @Resource(name = "deviceCommonService")
-    IDeviceCommonService deviceCommonService;
+    @Autowired
+    IDeviceStatusService iDeviceStatusService;
+    @Autowired
+    IYqjService iYqjService;
+    @Autowired
+    ISsjService iSsjService;
+    @Autowired
+    ITpzyqgService iTpzyqgService;
+    @Autowired
+    ILxzsjService iLxzsjService;
+    @Autowired
+    IJqRobotService iJqRobotService;
 
     /**
-     * 查询工艺参数信息
      * @param envQueryInTimeParam
      * @return
      */
@@ -51,7 +52,6 @@ public class MonitorController {
     }
 
     /**
-     * 查询工艺参数信息
      * @param envQueryHistoryParam
      * @return
      */
@@ -79,49 +79,37 @@ public class MonitorController {
         return ResultTool.successWithMap(jsonArray);
     }
 
-
-    /**
-     * 查询设备状态信息
-     * @return
-     */
     @PostMapping("/device/status")
-    public Result queryDeviceStatus(){
-        List<DeviceStatusModel> deviceStatusModelList = (List<DeviceStatusModel>)deviceSwitchService.getDeviceInTimeStatus(CommonConstant.TABLE_DEVICE_SWITCH);
-        deviceStatusModelList.addAll((List<DeviceStatusModel>)deviceStatusService.getDeviceInTimeStatus(CommonConstant.TABLE_DEVICE_STATUS));
-        return ResultTool.successWithMap(deviceStatusModelList);
+    public Result getRoomInTimeData(@RequestBody DeviceRoomParam deviceRoomParam) {
+        if (deviceRoomParam == null || deviceRoomParam.getFunctionRoom() == null) {
+            return ResultTool.failed(StateEnum.REQ_HAS_ERR);
+        }
+        return ResultTool.successWithMap(iDeviceStatusService.getInTimeData(deviceRoomParam.getFunctionRoom()));
     }
 
-    /**
-     * 查询AGV开关状态信息
-     * @return
-     */
-    @PostMapping("/agv/switch")
-    public Result queryAgvStatus(){
-        return ResultTool.successWithMap(deviceCommonService.getDeviceInTimeStatus(CommonConstant.TABLE_AGV));
-    }
-
-    /**
-     * 查询压曲机开关状态信息
-     * @return
-     */
     @PostMapping("/yqj/switch")
-    public Result queryYqjStatus(){
-        return ResultTool.successWithMap(deviceCommonService.getDeviceInTimeStatus(CommonConstant.TABLE_YQJ));
+    public Result getYqjInTimeData() {
+        return ResultTool.successWithMap(iYqjService.getInTimeDatas());
     }
 
-    /**
-     * 查询润粮机、输送机、码垛机器人开关状态信息
-     * @return
-     */
-    @PostMapping("/therest/switch")
-    public Result queryRljAndSsjAndRobotStatus(){
-        List<DeviceCommonModel> deviceCommonModelList = (List<DeviceCommonModel>)deviceCommonService.getDeviceInTimeStatus(CommonConstant.TABLE_RLJ);
+    @PostMapping("/ssj/switch")
+    public Result getSsjInTimeData() {
+        return ResultTool.successWithMap(iSsjService.getInTimeDatas());
+    }
 
-        //返回输送机信息状态信息
-        deviceCommonModelList.addAll((List<DeviceCommonModel>)deviceCommonService.getDeviceInTimeStatus(CommonConstant.TABLE_SSJ));
-        //返回码垛机器人状态信息
-        deviceCommonModelList.addAll((List<DeviceCommonModel>)deviceCommonService.getDeviceInTimeStatus(CommonConstant.TABLE_MD_ROBOT));
-        return ResultTool.successWithMap(deviceCommonModelList);
+    @PostMapping("/jqRobot/switch")
+    public Result getJqRobotInTimeData() {
+        return ResultTool.successWithMap(iJqRobotService.getInTimeDatas());
+    }
+
+    @PostMapping("/lxzsj/switch")
+    public Result getLxzsjInTimeData() {
+        return ResultTool.successWithMap(iLxzsjService.getInTimeDatas());
+    }
+
+    @PostMapping("/tpzyqg/switch")
+    public Result getTpzyqgInTimeData() {
+        return ResultTool.successWithMap(iTpzyqgService.getInTimeDatas());
     }
 
 

@@ -1,14 +1,13 @@
 package com.monitor.controller;
 
-import com.monitor.common.constant.CommonConstant;
 import com.monitor.common.entity.Result;
 import com.monitor.common.enums.StateEnum;
 import com.monitor.common.tools.PointTypeBeanTool;
 import com.monitor.common.tools.ResultTool;
-import com.monitor.entity.param.*;
-import com.monitor.service.IDeviceCommonService;
-import com.monitor.service.IDeviceService;
-import com.monitor.service.IWarnService;
+import com.monitor.entity.mpModel.*;
+import com.monitor.entity.param.MonitorUploadParam;
+import com.monitor.entity.param.WarnUploadParam;
+import com.monitor.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,14 +24,19 @@ import java.util.stream.Collectors;
 @RestController
 public class UploadDataController {
 
-    @Resource(name = "deviceStatusService")
-    IDeviceService deviceStatusService;
 
-    @Resource(name = "deviceSwitchService")
-    IDeviceService deviceSwitchService;
-
-    @Resource(name = "deviceCommonService")
-    IDeviceCommonService deviceCommonService;
+    @Autowired
+    IDeviceStatusService iDeviceStatusService;
+    @Autowired
+    IYqjService iYqjService;
+    @Autowired
+    ISsjService iSsjService;
+    @Autowired
+    ITpzyqgService iTpzyqgService;
+    @Autowired
+    ILxzsjService iLxzsjService;
+    @Autowired
+    IJqRobotService iJqRobotService;
 
     @Autowired
     IWarnService warnService;
@@ -62,12 +65,12 @@ public class UploadDataController {
      * @return
      */
     @PostMapping("/device/status/upload")
-    public Result uploadDeviceStatus(@RequestBody List<MonitorUploadParam> uploadParamList){
+    public Result uploadDeviceStatus(@RequestBody List<DeviceStatusModel> uploadParamList){
         if (checkList(uploadParamList)){
             return ResultTool.failed(StateEnum.REQ_HAS_ERR);
         }
         //过滤垃圾数据，deviceType为null过滤
-        List<MonitorUploadParam> allDeviceList = uploadParamList.stream().filter(o -> {
+        List<DeviceStatusModel> allStatusDeviceList = uploadParamList.stream().filter(o -> {
             String deviceType = o.getDeviceType();
             if (StringUtils.isEmpty(deviceType)){
                 return false;
@@ -75,74 +78,73 @@ public class UploadDataController {
             return true;
         }).collect(Collectors.toList());
 
-        List<MonitorUploadParam> statusList = allDeviceList.stream().filter(o -> {
-            String deviceType = o.getDeviceType();
-            if (CommonConstant.DEVICE_TEMPERATURE.equals(deviceType) || CommonConstant.DEVICE_HUMIDITY.equals(deviceType) ){
-                return true;
-            }
-            return false;
-        }).collect(Collectors.toList());
-
-        allDeviceList.removeAll(statusList);
-
-        return ResultTool.successWithMap(execDeviceInsert(allDeviceList, statusList));
+        return ResultTool.successWithMap(execDeviceInsert(allStatusDeviceList));
     }
 
     @Transactional
-    public int execDeviceInsert(List<MonitorUploadParam> allDeviceList, List<MonitorUploadParam> statusList) {
-        int count = 0;
-        if (statusList != null && statusList.size()>0) {
-            count += deviceStatusService.batchInsert(CommonConstant.TABLE_DEVICE_STATUS,statusList);
-        }
+    public int execDeviceInsert(List<DeviceStatusModel> allDeviceList) {
         if (allDeviceList != null && allDeviceList.size()>0) {
-            count += deviceSwitchService.batchInsert(CommonConstant.TABLE_DEVICE_SWITCH,allDeviceList);
+            if (iDeviceStatusService.saveOrUpdateBatch(allDeviceList)){
+                return allDeviceList.size();
+            }
         }
-        return count;
-    }
-
-
-    @PostMapping("/agv/upload")
-    public Result uploadAgvStatus(@RequestBody List<AgvUploadParam> agvUploadParams){
-        if (checkList(agvUploadParams)){
-            return ResultTool.failed(StateEnum.REQ_HAS_ERR);
-        }
-        return ResultTool.successWithMap(deviceCommonService.batchInsert(CommonConstant.TABLE_AGV,agvUploadParams));
+        return 0;
     }
 
 
     @PostMapping("/yqj/upload")
-    public Result uploadYqjStatus(@RequestBody List<YqjUploadParam> yqjUploadParams){
-        if (checkList(yqjUploadParams)){
+    public Result uploadYqjStatus(@RequestBody List<YqjModel> yqjModels){
+        if (checkList(yqjModels)){
             return ResultTool.failed(StateEnum.REQ_HAS_ERR);
         }
-        return ResultTool.successWithMap(deviceCommonService.batchInsert(CommonConstant.TABLE_YQJ,yqjUploadParams));
-    }
-
-
-    @PostMapping("/rlj/upload")
-    public Result uploadRljStatus(@RequestBody List<RljUploadParam> rljUploadParams){
-        if (checkList(rljUploadParams)){
-            return ResultTool.failed(StateEnum.REQ_HAS_ERR);
+        if (iYqjService.saveOrUpdateBatch(yqjModels)){
+            return ResultTool.successWithMap(yqjModels.size());
         }
-        return ResultTool.successWithMap(deviceCommonService.batchInsert(CommonConstant.TABLE_RLJ,rljUploadParams));
+        return ResultTool.failed(StateEnum.FAIL_SAVEDATA);
     }
-
 
     @PostMapping("/ssj/upload")
-    public Result uploadSsjStatus(@RequestBody List<SsjUploadParam> ssjUploadParams){
-        if (checkList(ssjUploadParams)){
+    public Result uploadSsjStatus(@RequestBody List<SsjModel> ssjModels){
+        if (checkList(ssjModels)){
             return ResultTool.failed(StateEnum.REQ_HAS_ERR);
         }
-        return ResultTool.successWithMap(deviceCommonService.batchInsert(CommonConstant.TABLE_SSJ,ssjUploadParams));
+        if (iSsjService.saveOrUpdateBatch(ssjModels)){
+            return ResultTool.successWithMap(ssjModels.size());
+        }
+        return ResultTool.failed(StateEnum.FAIL_SAVEDATA);
     }
 
-
     @PostMapping("/mdrobot/upload")
-    public Result uploadMdRobotStatus(@RequestBody List<MonitorUploadParam> mdRobotUploadParams){
-        if (checkList(mdRobotUploadParams)){
+    public Result uploadRobotStatus(@RequestBody List<JqRobotModel> jqRobotModels){
+        if (checkList(jqRobotModels)){
             return ResultTool.failed(StateEnum.REQ_HAS_ERR);
         }
-        return ResultTool.successWithMap(deviceCommonService.batchInsert(CommonConstant.TABLE_MD_ROBOT,mdRobotUploadParams));
+        if (iJqRobotService.saveOrUpdateBatch(jqRobotModels)){
+            return ResultTool.successWithMap(jqRobotModels.size());
+        }
+        return ResultTool.failed(StateEnum.FAIL_SAVEDATA);
+    }
+
+    @PostMapping("/lxzsj/upload")
+    public Result uploadLxzsjStatus(@RequestBody List<LxzsjModel> lxzsjModels){
+        if (checkList(lxzsjModels)){
+            return ResultTool.failed(StateEnum.REQ_HAS_ERR);
+        }
+        if (iLxzsjService.saveOrUpdateBatch(lxzsjModels)){
+            return ResultTool.successWithMap(lxzsjModels.size());
+        }
+        return ResultTool.failed(StateEnum.FAIL_SAVEDATA);
+    }
+
+    @PostMapping("/tpzyqg/upload")
+    public Result uploadTpzyqgStatus(@RequestBody List<TpzyqgModel> tpzyqgModels){
+        if (checkList(tpzyqgModels)){
+            return ResultTool.failed(StateEnum.REQ_HAS_ERR);
+        }
+        if (iTpzyqgService.saveOrUpdateBatch(tpzyqgModels)){
+            return ResultTool.successWithMap(tpzyqgModels.size());
+        }
+        return ResultTool.failed(StateEnum.FAIL_SAVEDATA);
     }
 
     @PostMapping("/warns/upload")

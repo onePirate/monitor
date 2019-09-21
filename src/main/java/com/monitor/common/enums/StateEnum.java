@@ -4,6 +4,7 @@ public enum StateEnum {
 
     OK(200,"成功"),
     FAIL(500,"请求失败，稍后重试"),
+    FAIL_SAVEDATA(501,"上传数据失败，请稍后重试"),
     REQ_HAS_ERR(506,"请求参数有误"),
     USER_HAS_ERR(507,"用户名或密码不能为空"),
     USER_NOT_EXISTS(508,"用户不存在"),

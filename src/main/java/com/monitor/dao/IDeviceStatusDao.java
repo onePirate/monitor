@@ -1,15 +1,12 @@
 package com.monitor.dao;
 
-import com.monitor.entity.bo.InsertModelParamBo;
-import com.monitor.entity.bo.ModelParamBo;
-import com.monitor.entity.model.DeviceStatusModel;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.monitor.entity.mpModel.DeviceStatusModel;
 
 import java.util.List;
 
-public interface IDeviceStatusDao {
+public interface IDeviceStatusDao extends BaseMapper<DeviceStatusModel> {
 
-    List<DeviceStatusModel> getInTimeData(ModelParamBo modelParamBo);
-
-    int batchInsert(InsertModelParamBo insertModelParamBo);
+    List<DeviceStatusModel> getInTimeData(int functionRoom);
 
 }
