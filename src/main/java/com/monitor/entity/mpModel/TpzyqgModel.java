@@ -24,6 +24,9 @@ public class TpzyqgModel implements Serializable {
     @TableField("p_switch")
     private int switchStatus;
 
+    @TableField(exist = false)
+    private String deviceType = "tpzyqg";
+
 
     private String collectTime;
     private String modifyUser;

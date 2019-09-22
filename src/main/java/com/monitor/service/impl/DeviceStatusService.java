@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class DeviceStatusService extends ServiceImpl<IDeviceStatusDao, DeviceStatusModel> implements IDeviceStatusService {
     @Override
-    public List<DeviceStatusModel> getInTimeData(int functionRoom) {
+    public List<DeviceStatusModel> getInTimeData(List<Integer> functionRoom) {
         return baseMapper.getInTimeData(functionRoom);
     }
 }

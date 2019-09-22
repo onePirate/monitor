@@ -24,6 +24,9 @@ public class JqRobotModel implements Serializable {
     @TableField("p_switch")
     private int switchStatus;
 
+    @TableField(exist = false)
+    private String deviceType = "jqRobot";
+
 
     private String collectTime;
     private String modifyUser;

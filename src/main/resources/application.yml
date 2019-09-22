@@ -45,8 +45,7 @@ log4j:
         dao: debug
 
 jobs:
-#  cron: 0 0 0 1/1 * ?
-  cron: 0 0/1 * * * ?
+  cron: 0 0 0 1/1 * ?
 #单位：毫秒
 token:
   timeout: 86400000

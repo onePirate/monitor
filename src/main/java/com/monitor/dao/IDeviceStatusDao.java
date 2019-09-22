@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface IDeviceStatusDao extends BaseMapper<DeviceStatusModel> {
 
-    List<DeviceStatusModel> getInTimeData(int functionRoom);
+    List<DeviceStatusModel> getInTimeData(List<Integer> functionRoom);
 
 }

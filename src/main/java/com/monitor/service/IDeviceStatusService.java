@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface IDeviceStatusService extends IService<DeviceStatusModel> {
 
-    List<DeviceStatusModel> getInTimeData(int functionRoom);
+    List<DeviceStatusModel> getInTimeData(List<Integer> functionRoom);
 
 }

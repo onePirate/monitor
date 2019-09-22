@@ -44,8 +44,8 @@ public class DeviceQueryController {
      * @return
      */
     @PostMapping("/env/monitor/query/intime")
-    public Result queryMonitorInfoInTime(@RequestBody EnvQueryInTimeParam envQueryInTimeParam){
-        if (envQueryInTimeParam ==null || StringUtils.isEmpty(envQueryInTimeParam.getPointType())){
+    public Result queryMonitorInfoInTime(@RequestBody EnvQueryInTimeParam envQueryInTimeParam) {
+        if (envQueryInTimeParam == null || StringUtils.isEmpty(envQueryInTimeParam.getPointType())) {
             return ResultTool.failed(StateEnum.REQ_HAS_ERR);
         }
         return ResultTool.successWithMap(PointTypeBeanTool.getMonitorService(envQueryInTimeParam.getPointType()).getEnvMonitorInTimeQuery(envQueryInTimeParam));
@@ -56,12 +56,12 @@ public class DeviceQueryController {
      * @return
      */
     @PostMapping("/env/monitor/query/history")
-    public Result queryMonitorInfoHistory(@RequestBody EnvQueryHistoryParam envQueryHistoryParam){
-        if (envQueryHistoryParam ==null || StringUtils.isEmpty(envQueryHistoryParam.getPointType())
+    public Result queryMonitorInfoHistory(@RequestBody EnvQueryHistoryParam envQueryHistoryParam) {
+        if (envQueryHistoryParam == null || StringUtils.isEmpty(envQueryHistoryParam.getPointType())
                 || StringUtils.isEmpty(envQueryHistoryParam.getPageIndex())
                 || StringUtils.isEmpty(envQueryHistoryParam.getPageSize())
                 || StringUtils.isEmpty(envQueryHistoryParam.getStartTime())
-                || StringUtils.isEmpty(envQueryHistoryParam.getStartTime())){
+                || StringUtils.isEmpty(envQueryHistoryParam.getStartTime())) {
             return ResultTool.failed(StateEnum.REQ_HAS_ERR);
         }
         List<CommonMonitorModel> monitorModels = PointTypeBeanTool.getMonitorService(envQueryHistoryParam.getPointType()).getEnvMonitorHistoryQuery(envQueryHistoryParam);
@@ -70,11 +70,11 @@ public class DeviceQueryController {
         for (int i = 0; i < pointList.size(); i++) {
             List<CommonMonitorModel> subMonitorModels = new ArrayList<>();
             for (int j = 0; j < monitorModels.size(); j++) {
-                if (pointList.get(i) == monitorModels.get(j).getPointName()){
+                if (pointList.get(i) == monitorModels.get(j).getPointName()) {
                     subMonitorModels.add(monitorModels.get(j));
                 }
             }
-            jsonArray.add(ResultTool.successWithList(subMonitorModels,envQueryHistoryParam.getPageIndex(),envQueryHistoryParam.getPageSize()));
+            jsonArray.add(ResultTool.successWithList(subMonitorModels, envQueryHistoryParam.getPageIndex(), envQueryHistoryParam.getPageSize()));
         }
         return ResultTool.successWithMap(jsonArray);
     }
@@ -85,6 +85,37 @@ public class DeviceQueryController {
             return ResultTool.failed(StateEnum.REQ_HAS_ERR);
         }
         return ResultTool.successWithMap(iDeviceStatusService.getInTimeData(deviceRoomParam.getFunctionRoom()));
+    }
+
+    @PostMapping("/allDevice/switch")
+    public Result getAllDeviceInTimeData() {
+        List<Object> allDeviceList = new ArrayList<>();
+        try {
+            allDeviceList.addAll(iYqjService.getInTimeDatas());
+        } catch (Exception ex) {
+            log.warn("yqj in time data has errors!", ex);
+        }
+        try {
+            allDeviceList.addAll(iSsjService.getInTimeDatas());
+        } catch (Exception ex) {
+            log.warn("ssj in time data has errors!", ex);
+        }
+        try {
+            allDeviceList.addAll(iJqRobotService.getInTimeDatas());
+        } catch (Exception ex) {
+            log.warn("JqRobot in time data has errors!", ex);
+        }
+        try {
+            allDeviceList.addAll(iTpzyqgService.getInTimeDatas());
+        } catch (Exception ex) {
+            log.warn("tpzyqg in time data has errors!", ex);
+        }
+        try {
+            allDeviceList.addAll(iLxzsjService.getInTimeDatas());
+        } catch (Exception ex) {
+            log.warn("lxzsj in time data has errors!", ex);
+        }
+        return ResultTool.successWithMap(allDeviceList);
     }
 
     @PostMapping("/yqj/switch")
