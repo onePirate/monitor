@@ -29,4 +29,11 @@ public class CommonConstant {
     public static final String TABLE_O2_CONCENTRATION = "o2_concentration";
 
 
+    public static final String JQ_ROBOT = "jqRobot";
+    public static final String LXZSJ = "lxzsj";
+    public static final String SSJ = "ssj";
+    public static final String TPZYQG = "tpzyqg";
+    public static final String YQJ = "yqj";
+
+
 }
